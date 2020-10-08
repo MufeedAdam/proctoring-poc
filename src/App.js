@@ -1,24 +1,40 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useState, useEffect} from 'react';
 import './App.css';
-
+import Rules from "./components/Rules.js"
+import Webcams from "./components/Webcam.js"
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Container, Button } from 'react-bootstrap';
 function App() {
+
+  const [permission, setPermission] = useState(false)
+
+  useEffect(()=>{
+
+    navigator.mediaDevices.getUserMedia({video: true})
+    .then(function(stream) {
+      console.log(stream)
+      setPermission(true)
+    })
+    .catch(function(err) {
+      /* handle the error */
+      console.log(err)
+      setPermission(false)
+    });
+
+  },[permission])
+
+  const handleStart = () =>{
+    console.log("START")
+    window.location = '/Home'
+  }
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Rules/>
+      <div className="mt-5">
+      {permission?(<Button variant="success" size="sm" disabled>Access Given To start camera</Button>):(<Button variant="danger" size="sm" disabled>Please give the permission to start camera</Button>)}
+      </div>
+      {permission?(<Button className="mt-5" variant="info" onClick={handleStart}>START TEST</Button>):(<Button className="mt-5" variant="info" onClick={handleStart} disabled>START TEST</Button>)}
+      <Webcams/>
     </div>
   );
 }
