@@ -39,7 +39,19 @@ function Webcams(props) {
     setInterval(async () =>{
       const detection = await faceapi.detectAllFaces(webcamRef.current, new faceapi.TinyFaceDetectorOptions).withFaceLandmarks().withFaceExpressions();
       const date = new Date()
-      console.log(date,detection)
+      console.log(webcamRef.toString())
+      var video = document.getElementById("video");
+	  	var canvas = document.getElementById("cv");
+      // canvas.getContext("2d").drawImage(video, 0, 0, 300, 300);
+      // var img = canvas.toDataURL("image/png");
+      // console.log(img)
+      if(detection.length<1){
+        console.log(date,"Please Stay inside")
+      }  
+      else{
+        console.log(date,detection)
+      }
+      
     },5000)
   }
 
@@ -52,7 +64,8 @@ function Webcams(props) {
 
   return (
   <div>
-    <video className="webpos" height="150" width="150"  ref={webcamRef} autoPlay muted onPlay={handlePlay}/>
+    <video className="webpos" id="video" height="300" width="300"  ref={webcamRef} autoPlay muted onPlay={handlePlay}/>
+    <canvas style={{visibility:"hidden"}}  width="300" height="300" id="cv"/>
     </div>
   );
 }
